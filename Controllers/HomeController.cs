@@ -17,6 +17,22 @@ public class HomeController : Controller
     {
         return View();
     }
+    public IActionResult Artesania()
+    {
+        return View();
+    }
+    public IActionResult ArteCrear()
+    {
+        return View();
+    }
+    public IActionResult Libros()
+    {
+        return View();
+    }
+    public IActionResult Ropa()
+    {
+        return View();
+    }
 
     public IActionResult Privacy()
     {

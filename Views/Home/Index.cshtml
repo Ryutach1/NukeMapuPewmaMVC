@@ -3,11 +3,42 @@
 }
 
 <div class="img-inicio-principal">
-    <img src="https://i.imgur.com/VbIX2Ld.png" class="img_principal" width="180px">
+    <center>
+        <h1 class="display-4">Ñuke Mapu Peuma</h1>
+        <img src="https://i.imgur.com/VbIX2Ld.png" class="img_principal" width="180px">
+    </center>
 </div>
 
+<div id="search-container">
+  <h2>Buscar producto: </h2>
+  <input type="text" id="searchInput" placeholder="Buscar objeto...">
+  <button onclick="search()">Buscar</button>
+  <ul id="results"></ul>
+</div>
+
+<script>
+  async function search() {
+    const query = document.getElementById("searchInput").value;
+    const response = await fetch(`/buscar?query=${encodeURIComponent(query)}`);
+    const data = await response.json();
+
+    const resultsList = document.getElementById("results");
+    resultsList.innerHTML = "";
+
+    if (data.length === 0) {
+      resultsList.innerHTML = "<li>No se encontraron resultados.</li>";
+    } else {
+      data.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item.nombre;
+        resultsList.appendChild(li);
+      });
+    }
+  }
+</script>
+
 <div class="text-central">
-    <h1 class="display-4">Ñuke Mapu Peuma</h1>
-    <p>Venga a ver los<a href="https://web.facebook.com/people/Ñuke-Mapu-Pewma/100091917854567/?rdid=PXaOVQ2MSRZX1Vr4&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F15hBgQxveA%2F&_rdc=1&_rdr"> ¡Nuevos productos aquí!</a>.</p>
+    
+    <p>Visite nuestra red social<a href="https://web.facebook.com/people/Ñuke-Mapu-Pewma/100091917854567/?rdid=PXaOVQ2MSRZX1Vr4&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F15hBgQxveA%2F&_rdc=1&_rdr"> ¡Aquí!</a>.</p>
 
 </div>

@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Crear Artesanía";
+}
+
+
+<div class="text-central">
+    <h1 class="display-4">Crear Nueva Artesanía</h1>
+    @* Se requiere de ArtesaniaController = debe haber una operacion con<<: asp-action="""""CrearArtesania"""""
+
+    <form asp-action="CrearArtesania">
+    <div class="form-group">
+        <label>Nombre</label>
+        <input asp-for="Nombre" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Descripción</label>
+        <input asp-for="Descripcion" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Precio</label>
+        <input asp-for="Precio" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Cantidad</label>
+        <input asp-for="Cantidad" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+*@
+</div>
