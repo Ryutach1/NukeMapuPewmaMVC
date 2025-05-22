@@ -1,13 +1,14 @@
-﻿@{
+﻿@model ProyectoNukeMapuPewmaMVC.Models.Artesania;
+@{
     ViewData["Title"] = "Crear Artesanía";
 }
 
 
 <div class="text-central">
-    <h1 class="display-4">Crear Nueva Artesanía</h1>
-    @* Se requiere de ArtesaniaController = debe haber una operacion con<<: asp-action="""""CrearArtesania"""""
+    <h1 class="display-4">Crear nueva Artesanía</h1>
+    @*Se requiere de ArtesaniaController = debe haber una operacion con<<: asp-action="""""CrearArtesania"""""*@
 
-    <form asp-action="CrearArtesania">
+    <form asp-action="ArteCrear">
     <div class="form-group">
         <label>Nombre</label>
         <input asp-for="Nombre" class="form-control" />
@@ -26,7 +27,7 @@
     </div>
     <button type="submit" class="btn btn-primary">Guardar</button>
 </form>
-*@
+
 
 @* Hola, soy el toto*@
 </div>

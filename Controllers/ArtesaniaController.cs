@@ -1,5 +1,6 @@
-using Artesania.Models;
-using using Microsoft.AspNetCore.Mvc;
+using ProyectoNukeMapuPewmaMVC.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProyectoNukeMapuPewmaVSC.Controllers
 {
@@ -16,12 +17,13 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
 
         public async Task<IActionResult> Artesania()//muestra productos en vista artesania
         {
-            return View(await _context.Artesanias.ToListAsync());
+            var artesanias = await _context.Artesanias.ToListAsync();  
+            return View(artesanias ?? new List<Artesania>());
         }
 
         public IActionResult Create()
         {
-            return View();
+            return View("~/Views/Home/ArteCrear.cshtml");
         }
 
          [HttpPost]

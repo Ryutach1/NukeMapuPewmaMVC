@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<ProyectoNukeMapuPewmaMVC.Models.Artesania>
+
+@{
     ViewData["Title"] = "Artesanía";
 }
 
@@ -17,18 +19,21 @@
             </tr>
         </thead>
         <tbody>
-            @*foreach (var item in Model)
+            @if (Model != null && Model.Any()) 
             {
-                <tr>
-                    <td>@item.Nombre</td>
-                    <td>@item.Descripcion</td>
-                    <td>@item.Precio</td>
-                    <td>
-                        <a asp-action="Editar" asp-route-id="@item.Id" class="btn btn-warning">Editar</a>
-                        <a asp-action="Eliminar" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
-                    </td>
-                </tr>
-            }*@
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Nombre</td>
+                        <td>@item.Descripcion</td>
+                        <td>@item.Precio</td>
+                        <td>
+                            <a asp-action="Editar" asp-route-id="@item.Id" class="btn btn-warning">Editar</a>
+                            <a asp-action="Eliminar" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            }
         </tbody>
     </table>
 </div>
