@@ -17,23 +17,23 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
 
         public async Task<IActionResult> Artesania()//muestra productos en vista artesania
         {
-            var artesanias = await _context.Artesanias.ToListAsync();  
-            return View(artesanias ?? new List<Artesania>());
+            var artesania = await _context.Artesania.ToListAsync();  
+            return View(artesania ?? new List<Artesania>());
         }
 
-        public IActionResult Create()
+        public IActionResult ArteCrear()
         {
-            return View("~/Views/Home/ArteCrear.cshtml");
+            return View();
         }
 
          [HttpPost]
-        public async Task<IActionResult> Create(Artesania artesania)
+        public async Task<IActionResult> ArteCrear(Artesania artesania)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(artesania);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Artesania));
             }
             return View(artesania);
         }

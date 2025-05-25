@@ -9,6 +9,6 @@ namespace ProyectoNukeMapuPewmaMVC.Models
     public class DataContext : DbContext
     {
         public DataContext(DbContextOptions<DataContext> options): base(options) { }
-        public DbSet<Artesania> Artesanias { get; set; }  
+        public DbSet<Artesania> Artesania { get; set; }  
     }
 }

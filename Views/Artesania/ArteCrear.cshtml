@@ -8,7 +8,7 @@
     <h1 class="display-4">Crear nueva Artesanía</h1>
     @*Se requiere de ArtesaniaController = debe haber una operacion con<<: asp-action="""""CrearArtesania"""""*@
 
-    <form asp-action="ArteCrear">
+    <form asp-action="ArteCrear" method="post"> 
     <div class="form-group">
         <label>Nombre</label>
         <input asp-for="Nombre" class="form-control" />
