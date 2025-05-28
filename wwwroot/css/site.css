@@ -27,6 +27,17 @@ body {
   box-sizing: border-box;
 }
 
+.search-section{
+  background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), 
+                url('https://i.imgur.com/CvqxCmq.jpeg');
+  
+    
+  box-sizing: border-box;
+}
+.section-table{
+  background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9))
+}
+
 :root {
         --primary-color: #2e7d32;
         --secondary-color: #4caf50;

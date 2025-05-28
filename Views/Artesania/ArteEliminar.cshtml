@@ -1,0 +1,36 @@
+﻿@model ProyectoNukeMapuPewmaMVC.Models.Artesania;
+@{
+    ViewData["Title"] = "Eliminar Artesanía";
+}
+
+
+<div class="text-central">
+    <h1 class="display-4">Eliminar Artesanía</h1>
+    <h3>¿Estás seguro que deseas eliminar esta artesanía?</h3>
+    <hr/>
+
+    
+    <div>
+        <h4>Detalles de la artesanía</h4>
+        <br>
+        <dl class="row">
+            <dt class="col-sm-2">Nombre</dt>
+            <dd class="col-sm-10">@Model.Nombre</dd>
+            
+            <dt class="col-sm-2">Descripción</dt>
+            <dd class="col-sm-10">@Model.Descripcion</dd>
+            
+            <dt class="col-sm-2">Precio</dt>
+            <dd class="col-sm-10">@Model.Precio</dd>
+            
+            <dt class="col-sm-2">Cantidad</dt>
+            <dd class="col-sm-10">@Model.Cantidad</dd>
+        </dl>
+        
+        <form asp-action="ArteEliminar" method="post">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <a asp-action="Artesania" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
