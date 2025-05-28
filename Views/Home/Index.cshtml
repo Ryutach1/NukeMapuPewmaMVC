@@ -2,43 +2,97 @@
     ViewData["Title"] = "Página Principal";
 }
 
-<div class="img-inicio-principal">
-    <center>
-        <h1 class="display-4">Ñuke Mapu Peuma</h1>
-        <img src="https://i.imgur.com/VbIX2Ld.png" class="img_principal" width="180px">
-    </center>
+<div class="app-container">
+    <!-- Encabezado con logo y título -->
+    <header class="app-header">
+        <div class="header-content">
+            <img src="https://i.imgur.com/VbIX2Ld.png" alt="Logo Ñuke Mapu Peuma" class="logo">
+            <h1 class="title">Ñuke Mapu Peuma</h1>
+        </div>
+    </header>
+
+    <!-- Sección de búsqueda mejorada -->
+    <section class="search-section">
+        <h2 class="search-title">Buscar producto:</h2>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Ingrese nombre del producto..." class="search-input">
+            <button onclick="search()" class="search-button">
+                <i class="fas fa-search"></i> Buscar
+            </button>
+        </div>
+        <div id="searchResults" class="results-container">
+            <!-- Los resultados aparecerán aquí -->
+        </div>
+    </section>
+
+    <!-- Pie de página -->
+    <footer class="app-footer">
+        <p>Visite nuestra red social <a href="https://web.facebook.com/people/Ñuke-Mapu-Pewma/100091917854567/?rdid=PXaOVQ2MSRZX1Vr4&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F15hBgQxveA%2F&_rdc=1&_rdr" target="_blank" class="social-link">¡Aquí!</a></p>
+    </footer>
 </div>
 
-<div id="search-container">
-  <h2>Buscar producto: </h2>
-  <input type="text" id="searchInput" placeholder="Buscar objeto...">
-  <button onclick="search()">Buscar</button>
-  <ul id="results"></ul>
-</div>
+    
 
+
+<!-- Script mejorado -->
 <script>
-  async function search() {
-    const query = document.getElementById("searchInput").value;
-    const response = await fetch(`/buscar?query=${encodeURIComponent(query)}`);
-    const data = await response.json();
-
-    const resultsList = document.getElementById("results");
-    resultsList.innerHTML = "";
-
-    if (data.length === 0) {
-      resultsList.innerHTML = "<li>No se encontraron resultados.</li>";
-    } else {
-      data.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = item.nombre;
-        resultsList.appendChild(li);
-      });
+    // Función de búsqueda mejorada con manejo de errores
+    async function search() {
+        const query = document.getElementById("searchInput").value.trim();
+        const resultsContainer = document.getElementById("searchResults");
+        
+        if (!query) {
+            resultsContainer.innerHTML = '<div class="result-item">Por favor, ingrese un término de búsqueda</div>';
+            return;
+        }
+        
+        // Mostrar estado de carga
+        resultsContainer.innerHTML = '<div class="result-item"><i class="fas fa-spinner fa-spin"></i> Buscando productos...</div>';
+        
+        try {
+            const response = await fetch(`/buscar?query=${encodeURIComponent(query)}`);
+            
+            if (!response.ok) {
+                throw new Error('Error en la búsqueda');
+            }
+            
+            const data = await response.json();
+            
+            if (data.length === 0) {
+                resultsContainer.innerHTML = '<div class="result-item">No se encontraron resultados para "' + query + '"</div>';
+            } else {
+                let html = '';
+                data.forEach(item => {
+                    html += `
+                        <div class="result-item">
+                            <span>${item.nombre}</span>
+                            <button class="details-button" onclick="showDetails(${item.id})">
+                                <i class="fas fa-info-circle"></i> Detalles
+                            </button>
+                        </div>
+                    `;
+                });
+                resultsContainer.innerHTML = html;
+            }
+        } catch (error) {
+            resultsContainer.innerHTML = '<div class="result-item">Error al realizar la búsqueda. Intente nuevamente.</div>';
+            console.error('Error:', error);
+        }
     }
-  }
+
+    // Función para mostrar detalles (puedes implementarla según tus necesidades)
+    function showDetails(productId) {
+        alert('Mostrando detalles del producto ID: ' + productId);
+        // Aquí podrías redirigir a una página de detalles o mostrar un modal
+    }
+
+    // Permitir búsqueda al presionar Enter
+    document.getElementById("searchInput").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            search();
+        }
+    });
 </script>
 
-<div class="text-central">
-    
-    <p>Visite nuestra red social<a href="https://web.facebook.com/people/Ñuke-Mapu-Pewma/100091917854567/?rdid=PXaOVQ2MSRZX1Vr4&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F15hBgQxveA%2F&_rdc=1&_rdr"> ¡Aquí!</a>.</p>
-
-</div>
+<!-- Font Awesome para íconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">

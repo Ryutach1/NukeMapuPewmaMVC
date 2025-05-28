@@ -1,35 +1,37 @@
-﻿@model IEnumerable<ProyectoNukeMapuPewmaMVC.Models.Artesania>
-
+﻿@model IEnumerable<ProyectoNukeMapuPewmaMVC.Models.Libro>
 @{
-    ViewData["Title"] = "Artesanía";
+    ViewData["Title"] = "Libro";
 }
 
-
 <div class="text-central">
-    <h1 class="display-4">Ñuke Mapu Peuma - Artesanía Unica</h1>
-    <a asp-area=""  class="btn btn-success" asp-action="ArteCrear">Crear nueva</a>
+    <h1 class="display-4">Ñuke Mapu Peuma - Libros</h1>
+    <a asp-area=""  class="btn btn-success" asp-action="LibroCrear">Crear nueva</a>
 
-    <table class="table">
+
+    <table class="table"></table>
         <thead>
             <tr>
                 <th>Nombre</th>
+                <th>Categoria</th>
                 <th>Descripción</th>
                 <th>Precio</th>
                 <th>Cantidad</th>
             </tr>
         </thead>
         <tbody>
+            @*
             @if (Model != null && Model.Any()) 
             {
                 @foreach (var item in Model)
                 {
                     <tr>
                         <td>@item.Nombre</td>
+                        <td>@item.Categoria</td>
                         <td>@item.Descripcion</td>
                         <td>@item.Precio</td>
                         <td>
-                            <a asp-action="ArteEditar" asp-route-id="@item.Id" class="btn btn-warning">Editar</a>
-                            <a asp-action="ArteEliminar" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
+                            <a asp-action="Editar" asp-route-id="@item.Id" class="btn btn-warning">Editar</a>
+                            <a asp-action="Eliminar" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
                         </td>
                     </tr>
                 }
@@ -41,5 +43,8 @@
                 </tr>
             }
         </tbody>
+        *@
     </table>
+
+
 </div>
