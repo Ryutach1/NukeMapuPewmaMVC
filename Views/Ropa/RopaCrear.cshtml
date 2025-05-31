@@ -5,32 +5,33 @@
 
 
 <div class="text-central">
-    <h1 class="display-4">Crear nuevos Ropas</h1>
+    <h2 class="display-4">Formulario de inscripción de nuevas prendas</h2>
     @*Se requiere de ArtesaniaController = debe haber una operacion con<<: asp-action="""""CrearArtesania"""""*@
 
-    <form asp-action="LibroCrear" method="post">  
+    <form asp-action="RopaCrear" method="post">  
     <div class="form-group">
         <label>Nombre</label>
         <input asp-for="Nombre" class="form-control" />
     </div>
-    <div class="form-group">
+    <div class="form-row d-flex">
+    <div class="form-group col-md-6 me-3">
         <label>Talla</label>
         <input asp-for="Talla" class="form-control" />
     </div>
-    <div class="form-group">
-        <label>Descripción</label>
-        <input asp-for="Descripcion" class="form-control" />
-    </div>
-    <div class="form-group">
+    <div class="form-group col-md-6 me-2">
         <label>Precio</label>
-        <input asp-for="Precio" class="form-control" />
+        <div class="input-group">
+            <span class="input-group-text">CLP $</span>
+            <input asp-for="Precio" type="number" class="form-control" placeholder="Precio en CLP" />
+        </div>
     </div>
-    <div class="form-group">
+    <div class="form-group col-md-6">
         <label>Cantidad</label>
-        <input asp-for="Cantidad" class="form-control" />
+        <input asp-for="Cantidad" type="number" class="form-control" placeholder="Número total de artículos" />
     </div>
+    </div>
+    <br>
     <button type="submit" class="btn btn-primary">Guardar</button>
 </form>
-
 
 </div>

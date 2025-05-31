@@ -10,7 +10,8 @@ namespace ProyectoNukeMapuPewmaMVC.Models
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         public DbSet<Artesania> Artesania { get; set; }
-        public DbSet<Libro> Libro { get; set; }  
+        public DbSet<Libro> Libro { get; set; }
         public DbSet<Ropa> Ropa { get; set; }  
+        public DbSet<Otros> Otros { get; set; }  
     }
 }

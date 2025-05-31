@@ -80,8 +80,6 @@ body {
     .logo {
         width: 180px;
         height: auto;
-        border-radius: 30%;
-        border: 3px solid var(--primary-color);
         box-shadow: var(--shadow);
     }
 
@@ -174,6 +172,15 @@ body {
         text-align: center;
         padding: 20px;
         color: var(--text-color);
+    }
+
+    .btn-social {
+        border-radius: 50%;
+        font-size: 20px;
+        width: 35px;
+        height: 35px;
+        line-height: 45px;
+        text-align: center;
     }
 
     .social-link {
