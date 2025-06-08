@@ -1,0 +1,35 @@
+@model ProyectoNukeMapuPewmaMVC.Models.Ropa;
+@{
+    ViewData["Title"] = "Modificar Ropa";
+}
+
+
+<div class="text-central">
+    <h1 class="display-4">Modificar Prenda</h1>
+    
+
+    <form asp-action="RopaEditar" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <label>Nombre</label>
+            <input asp-for="Nombre" class="form-control" />
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Talla</label>
+            <input asp-for="Talla" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Precio</label>
+            <input asp-for="Precio" class="form-control" />
+            <span asp-validation-for="Precio" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Cantidad</label>
+            <input asp-for="Cantidad" class="form-control" />
+            <span asp-validation-for="Cantidad" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    </form>
+
+</div>
