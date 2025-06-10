@@ -28,20 +28,24 @@
     <!-- Pie de página -->
     <footer class="app-footer">
         <p>Visite nuestras redes sociales. <br>
-        <a class="btn btn-outline-dark btn-social mx-1" href="https://www.facebook.com/profile.php?id=100091917854567" target="_blank">
-            <i class="fab fa-facebook-f"></i>
-        </a>
-        <a class="btn btn-outline-dark btn-social mx-1" href="https://www.instagram.com/nuke_mapu_pewma/" target="_blank">
-            <i class="fab fa-instagram"></i>
-        </a>
-        <a class="btn btn-outline-dark btn-social mx-1" href="https://l.facebook.com/l.php?u=https%3A%2F%2Fapi.whatsapp.com%2Fsend%3Fphone%3D%252B56988095489%26context%3DAff3JQtp2EmegHTnxoX-_NWvMyWg6zvPnlkyoCyRrQicxPLHsO4MejhOyWBI8_ydxeGC8NAo-ScuSlu1Y36PQx80nEO8Px8vP1bYIb9IhZ5FURO97yoRxmzO6knhz-9Wa7zgySYdi80dZu-FcN1V5lMTrQ%26source%3DFB_Page%26app%3Dfacebook%26entry_point%3Dpage_cta%26fbclid%3DIwZXh0bgNhZW0CMTAAYnJpZBExeGEwbEtOeHQ3ZXRwcEt0TwEe84zGVR4oxaLQA3T3zVGGyfIgvqE8EmDlbKg3lvTssb78VKOn0WHo4DOlwew_aem_kfVX6a3QiEOQy8_uGNDsgA&h=AT2uIkBPT_dobwwz78S7eVAteP0QraAroxvd2wE-47cg0SPhSJA1s25uAgXNx7Z8U06hlHqVY48Y7DTDnEEBLFhWXgzu4EPI09d6ctwB49p--NXkDzRWNZfmDYJCs-ZVdwOldQ" target="_blank">
-            <i class="fab fa-whatsapp"></i>
-        </a>
+            <a class="btn btn-outline-dark btn-social mx-1"
+                href="https://www.facebook.com/profile.php?id=100091917854567" target="_blank">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a class="btn btn-outline-dark btn-social mx-1" href="https://www.instagram.com/nuke_mapu_pewma/"
+                target="_blank">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a class="btn btn-outline-dark btn-social mx-1"
+                href="https://l.facebook.com/l.php?u=https%3A%2F%2Fapi.whatsapp.com%2Fsend%3Fphone%3D%252B56988095489%26context%3DAff3JQtp2EmegHTnxoX-_NWvMyWg6zvPnlkyoCyRrQicxPLHsO4MejhOyWBI8_ydxeGC8NAo-ScuSlu1Y36PQx80nEO8Px8vP1bYIb9IhZ5FURO97yoRxmzO6knhz-9Wa7zgySYdi80dZu-FcN1V5lMTrQ%26source%3DFB_Page%26app%3Dfacebook%26entry_point%3Dpage_cta%26fbclid%3DIwZXh0bgNhZW0CMTAAYnJpZBExeGEwbEtOeHQ3ZXRwcEt0TwEe84zGVR4oxaLQA3T3zVGGyfIgvqE8EmDlbKg3lvTssb78VKOn0WHo4DOlwew_aem_kfVX6a3QiEOQy8_uGNDsgA&h=AT2uIkBPT_dobwwz78S7eVAteP0QraAroxvd2wE-47cg0SPhSJA1s25uAgXNx7Z8U06hlHqVY48Y7DTDnEEBLFhWXgzu4EPI09d6ctwB49p--NXkDzRWNZfmDYJCs-ZVdwOldQ"
+                target="_blank">
+                <i class="fab fa-whatsapp"></i>
+            </a>
         </p>
     </footer>
 </div>
 
-    
+
 
 
 <!-- Script mejorado -->
@@ -50,24 +54,24 @@
     async function search() {
         const query = document.getElementById("searchInput").value.trim();
         const resultsContainer = document.getElementById("searchResults");
-        
+
         if (!query) {
             resultsContainer.innerHTML = '<div class="result-item">Por favor, ingrese un término de búsqueda</div>';
             return;
         }
-        
+
         // Mostrar estado de carga
         resultsContainer.innerHTML = '<div class="result-item"><i class="fas fa-spinner fa-spin"></i> Buscando productos...</div>';
-        
+
         try {
-            const response = await fetch(`/buscar?query=${encodeURIComponent(query)}`);
-            
+            const response = await fetch(`/api/Producto/buscar?query=${encodeURIComponent(query)}`);
+
             if (!response.ok) {
                 throw new Error('Error en la búsqueda');
             }
-            
+
             const data = await response.json();
-            
+
             if (data.length === 0) {
                 resultsContainer.innerHTML = '<div class="result-item">No se encontraron resultados para "' + query + '"</div>';
             } else {
@@ -76,8 +80,8 @@
                     html += `
                         <div class="result-item">
                             <span>${item.nombre}</span>
-                            <button class="details-button" onclick="showDetails(${item.id})">
-                                <i class="fas fa-info-circle"></i> Detalles
+                            <button class="search-button" onclick="showDetails(${item.id}, '${item.tipo}')">
+                            <i class="fas fa-search"></i> Detalles
                             </button>
                         </div>
                     `;
@@ -91,17 +95,15 @@
     }
 
     // Función para mostrar detalles (puedes implementarla según tus necesidades)
-    function showDetails(productId) {
-        alert('Mostrando detalles del producto ID: ' + productId);
-        // Aquí podrías redirigir a una página de detalles o mostrar un modal
+    function showDetails(id, tipo) {
+        window.location.href = `/Producto/Detalle/${id}?tipo=${tipo}`;
     }
 
+
     // Permitir búsqueda al presionar Enter
-    document.getElementById("searchInput").addEventListener("keypress", function(event) {
+    document.getElementById("searchInput").addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
             search();
         }
     });
 </script>
-
-
