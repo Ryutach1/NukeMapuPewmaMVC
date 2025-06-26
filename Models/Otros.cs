@@ -8,5 +8,7 @@ namespace ProyectoNukeMapuPewmaMVC.Models
         public required string Descripcion { get; set; }
         public decimal Precio { get; set; }
         public int Cantidad { get; set; }
+        public string? Estado { get; set; }
+        public string? ImagenRuta { get; set; }
     }
 }

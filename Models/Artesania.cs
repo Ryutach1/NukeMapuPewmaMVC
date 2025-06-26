@@ -8,7 +8,7 @@ public class Artesania
 
     [Required(ErrorMessage = "El nombre es obligatorio")]
     public required string Nombre { get; set; }
-    
+
     public required string Descripcion { get; set; }
 
     [Required(ErrorMessage = "El precio es obligatorio")]
@@ -18,5 +18,6 @@ public class Artesania
     [Required(ErrorMessage = "La cantidad es obligatoria.")]
     [Range(0, int.MaxValue, ErrorMessage = "La cantidad no puede ser negativa")]
     public int Cantidad { get; set; }
+    public string? ImagenRuta { get; set; }
     
 }

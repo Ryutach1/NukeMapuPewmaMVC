@@ -17,7 +17,7 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
 
         public async Task<IActionResult> Ropa()//muestra productos en vista artesania
         {
-            var ropa = await _context.Ropa.ToListAsync();  
+            var ropa = await _context.Ropa.ToListAsync();
             return View(ropa ?? new List<Ropa>());
         }
 
@@ -26,11 +26,23 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
             return View();
         }
 
-         [HttpPost]
-        public async Task<IActionResult> RopaCrear(Ropa ropa)
+        [HttpPost]
+        public async Task<IActionResult> RopaCrear(Ropa ropa, IFormFile Imagen)
         {
             if (ModelState.IsValid)
             {
+                if (Imagen != null && Imagen.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "productosImg");
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Imagen.FileName);
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await Imagen.CopyToAsync(stream);
+                    }
+
+                    ropa.ImagenRuta = "/productosImg/" + fileName;
+                }
                 _context.Add(ropa);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Ropa));
@@ -57,7 +69,7 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
         // Acción para procesar la edición
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RopaEditar(int id, Ropa ropa)
+        public async Task<IActionResult> RopaEditar(int id, Ropa ropa, IFormFile Imagen)
         {
             if (id != ropa.Id)
             {
@@ -68,6 +80,31 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
             {
                 try
                 {
+                    var ropaExistente = await _context.Ropa.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id);
+                    if (Imagen != null && Imagen.Length > 0)
+                    {
+                        // Eliminar imagen anterior si existe
+                        if (!string.IsNullOrEmpty(ropa.ImagenRuta))
+                        {
+                            var rutaAnterior = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", ropa.ImagenRuta.TrimStart('/'));
+                            if (System.IO.File.Exists(rutaAnterior))
+                            {
+                                System.IO.File.Delete(rutaAnterior);
+                            }
+                        }
+
+                        // Subir nueva imagen
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Imagen.FileName);
+                        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "productosImg");
+                        var filePath = Path.Combine(uploadsFolder, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await Imagen.CopyToAsync(stream);
+                        }
+
+                        ropa.ImagenRuta = "/productosImg/" + fileName;
+                    }
                     _context.Update(ropa);
                     await _context.SaveChangesAsync();
                 }
@@ -113,6 +150,14 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
             var ropa = await _context.Ropa.FindAsync(id);
             if (ropa != null)
             {
+                if (!string.IsNullOrEmpty(ropa.ImagenRuta))
+                {
+                    var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", ropa.ImagenRuta.TrimStart('/'));
+                    if (System.IO.File.Exists(ruta))
+                    {
+                        System.IO.File.Delete(ruta);
+                    }
+                }
                 _context.Ropa.Remove(ropa);
                 await _context.SaveChangesAsync();
             }

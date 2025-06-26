@@ -27,17 +27,29 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ArteCrear(Artesania artesania)
+        public async Task<IActionResult> ArteCrear(Artesania artesania, IFormFile Imagen)
         {
             if (ModelState.IsValid)
             {
+                if (Imagen != null && Imagen.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "productosImg");
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Imagen.FileName);
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await Imagen.CopyToAsync(stream);
+                    }
+
+                    artesania.ImagenRuta = "/productosImg/" + fileName;
+                }
                 _context.Add(artesania);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Artesania));
             }
             return View(artesania);
         }
-        
+
         // Acción para mostrar el formulario de edición
         public async Task<IActionResult> ArteEditar(int? id)
         {
@@ -57,7 +69,7 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
         // Acción para procesar la edición
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ArteEditar(int id, Artesania artesania)
+        public async Task<IActionResult> ArteEditar(int id, Artesania artesania, IFormFile Imagen)
         {
             if (id != artesania.Id)
             {
@@ -68,6 +80,31 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
             {
                 try
                 {
+                    var artesaniaExistente = await _context.Artesania.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+                    if (Imagen != null && Imagen.Length > 0)
+                    {
+                        // Eliminar imagen anterior si existe
+                        if (!string.IsNullOrEmpty(artesania.ImagenRuta))
+                        {
+                            var rutaAnterior = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", artesania.ImagenRuta.TrimStart('/'));
+                            if (System.IO.File.Exists(rutaAnterior))
+                            {
+                                System.IO.File.Delete(rutaAnterior);
+                            }
+                        }
+
+                        // Subir nueva imagen
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Imagen.FileName);
+                        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "productosImg");
+                        var filePath = Path.Combine(uploadsFolder, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await Imagen.CopyToAsync(stream);
+                        }
+
+                        artesania.ImagenRuta = "/productosImg/" + fileName;
+                    }
                     _context.Update(artesania);
                     await _context.SaveChangesAsync();
                 }
@@ -113,6 +150,14 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
             var artesania = await _context.Artesania.FindAsync(id);
             if (artesania != null)
             {
+                if (!string.IsNullOrEmpty(artesania.ImagenRuta))
+                {
+                    var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", artesania.ImagenRuta.TrimStart('/'));
+                    if (System.IO.File.Exists(ruta))
+                    {
+                        System.IO.File.Delete(ruta);
+                    }
+                }
                 _context.Artesania.Remove(artesania);
                 await _context.SaveChangesAsync();
             }
