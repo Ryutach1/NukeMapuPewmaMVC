@@ -14,7 +14,7 @@ namespace ProyectoNukeMapuPewmaMVC.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
 
             modelBuilder.Entity("ProyectoNukeMapuPewmaMVC.Models.Artesania", b =>
                 {
@@ -27,6 +27,9 @@ namespace ProyectoNukeMapuPewmaMVC.Migrations
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImagenRuta")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nombre")
@@ -69,6 +72,9 @@ namespace ProyectoNukeMapuPewmaMVC.Migrations
                     b.Property<int>("Fecha")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ImagenRuta")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -94,6 +100,12 @@ namespace ProyectoNukeMapuPewmaMVC.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Estado")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImagenRuta")
+                        .HasColumnType("TEXT");
+
                     b.Property<decimal>("Precio")
                         .HasColumnType("TEXT");
 
@@ -114,6 +126,12 @@ namespace ProyectoNukeMapuPewmaMVC.Migrations
 
                     b.Property<int>("Cantidad")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Estado")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImagenRuta")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Nombre")
                         .IsRequired()

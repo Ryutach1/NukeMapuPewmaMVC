@@ -17,7 +17,7 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
 
         public async Task<IActionResult> Libro()//muestra productos en vista artesania
         {
-            var libro = await _context.Libro.ToListAsync();  
+            var libro = await _context.Libro.ToListAsync();
             return View(libro ?? new List<Libro>());
         }
 
@@ -26,11 +26,23 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
             return View();
         }
 
-         [HttpPost]
-        public async Task<IActionResult> LibroCrear(Libro libro)
+        [HttpPost]
+        public async Task<IActionResult> LibroCrear(Libro libro, IFormFile Imagen)
         {
             if (ModelState.IsValid)
             {
+                if (Imagen != null && Imagen.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "productosImg");
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Imagen.FileName);
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await Imagen.CopyToAsync(stream);
+                    }
+
+                    libro.ImagenRuta = "/productosImg/" + fileName;
+                }
                 _context.Add(libro);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Libro));
@@ -57,7 +69,7 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
         // Acción para procesar la edición
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LibroEditar(int id, Libro libro)
+        public async Task<IActionResult> LibroEditar(int id, Libro libro, IFormFile Imagen)
         {
             if (id != libro.Id)
             {
@@ -68,6 +80,31 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
             {
                 try
                 {
+                    var libroExistente = await _context.Libro.AsNoTracking().FirstOrDefaultAsync(l => l.Id == id);
+                    if (Imagen != null && Imagen.Length > 0)
+                    {
+                        // Eliminar imagen anterior si existe
+                        if (!string.IsNullOrEmpty(libro.ImagenRuta))
+                        {
+                            var rutaAnterior = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", libro.ImagenRuta.TrimStart('/'));
+                            if (System.IO.File.Exists(rutaAnterior))
+                            {
+                                System.IO.File.Delete(rutaAnterior);
+                            }
+                        }
+
+                        // Subir nueva imagen
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Imagen.FileName);
+                        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "productosImg");
+                        var filePath = Path.Combine(uploadsFolder, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await Imagen.CopyToAsync(stream);
+                        }
+
+                        libro.ImagenRuta = "/productosImg/" + fileName;
+                    }
                     _context.Update(libro);
                     await _context.SaveChangesAsync();
                 }
@@ -113,6 +150,14 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
             var libro = await _context.Libro.FindAsync(id);
             if (libro != null)
             {
+                if (!string.IsNullOrEmpty(libro.ImagenRuta))
+                {
+                    var ruta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", libro.ImagenRuta.TrimStart('/'));
+                    if (System.IO.File.Exists(ruta))
+                    {
+                        System.IO.File.Delete(ruta);
+                    }
+                }
                 _context.Libro.Remove(libro);
                 await _context.SaveChangesAsync();
             }

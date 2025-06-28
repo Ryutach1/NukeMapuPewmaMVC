@@ -16,6 +16,7 @@
                     <th>Talla</th>
                     <th>Precio</th>
                     <th>Cantidad</th>
+                    <th>Estado</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,6 +29,7 @@
                             <td>@item.Talla</td>
                             <td>@item.Precio</td>
                             <td>@item.Cantidad</td>
+                            <td>@item.Estado</td>
                             <td>
                                 <a asp-action="RopaEditar" asp-route-id="@item.Id" class="btn btn-warning">Editar</a>
                                 <a asp-action="RopaEliminar" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
@@ -38,7 +40,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="5"><strong>No hay productos en la base de datos</strong></td>
+                        <td colspan="5"><strong>No hay productos en la base de datos. Inserte elementos para visualizarlos</strong></td>
                     </tr>
                 }
             </tbody>
