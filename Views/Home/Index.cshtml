@@ -1,5 +1,12 @@
-﻿@{
+﻿@model dynamic
+@{
     ViewData["Title"] = "Página Principal";
+     var tipo = Model.GetType().Name;
+
+    bool HasProperty(object obj, string propertyName)
+    {
+        return obj.GetType().GetProperty(propertyName) != null;
+    }
 }
 
 <div class="app-container">
@@ -23,6 +30,21 @@
             <!-- Los resultados aparecerán aquí -->
         </div>
     </section>
+
+<!-- prueba  -->
+    <h2> Vista notificaciones</h2>
+    @if (Model != null && Model.Any()) 
+        {
+            @foreach (var tipo in Model)
+        {
+           <tr>
+                <td>@item.Nombre</td>
+                <td class="cantidad">@item.Cantidad</td>
+                <td class="estado"></td>
+            </tr>
+        }
+                }
+
 @*
     <!-- Pie de página -->
     <footer class="app-footer">
@@ -94,3 +116,19 @@
         }
     });
 </script>
+
+<script>
+    $(document).ready(function () {
+        $('#tablaProductos tbody tr').each(function () {
+            var cantidad = parseInt($(this).find('.cantidad').text());
+
+            if (cantidad < 2) {
+                $(this).find('.estado').html('<span style="color: red;">¡Pocas unidades!</span>');
+            } else {
+                $(this).find('.estado').text('Disponible');
+            }
+        });
+    });
+</script>
+
+
