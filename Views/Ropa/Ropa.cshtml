@@ -3,6 +3,10 @@
     ViewData["Title"] = "Ropa";
 }
 
+@if (TempData["RopaMensaje"] != null)
+{
+    <div class="alert alert-success">@TempData["RopaMensaje"]</div>
+}
 
 <div class="text-central">
     <h1 class="display-4">Catálogo de Ropa</h1>

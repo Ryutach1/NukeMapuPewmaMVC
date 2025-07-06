@@ -69,60 +69,66 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
         // Acción para procesar la edición
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RopaEditar(int id, Ropa ropa, IFormFile Imagen)
+        public async Task<IActionResult> RopaEditar(int id, [Bind("Id,Nombre,Talla,Precio,Cantidad,Estado")] Ropa ropa, IFormFile? Imagen)
         {
             if (id != ropa.Id)
-            {
                 return NotFound();
-            }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(ropa);
+
+            try
             {
-                try
+                var ropaExistente = await _context.Ropa.FirstOrDefaultAsync(r => r.Id == id);
+                if (ropaExistente == null)
+                    return NotFound();
+
+                string? imagenAnterior = ropaExistente.ImagenRuta;
+
+                // Actualizar campos
+                ropaExistente.Nombre = ropa.Nombre;
+                ropaExistente.Talla = ropa.Talla;
+                ropaExistente.Estado = ropa.Estado;
+                ropaExistente.Precio = ropa.Precio;
+                ropaExistente.Cantidad = ropa.Cantidad;
+
+                if (Imagen != null && Imagen.Length > 0)
                 {
-                    var ropaExistente = await _context.Ropa.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id);
-                    if (Imagen != null && Imagen.Length > 0)
+                    // Borrar imagen anterior
+                    if (!string.IsNullOrEmpty(imagenAnterior))
                     {
-                        // Eliminar imagen anterior si existe
-                        if (!string.IsNullOrEmpty(ropa.ImagenRuta))
-                        {
-                            var rutaAnterior = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", ropa.ImagenRuta.TrimStart('/'));
-                            if (System.IO.File.Exists(rutaAnterior))
-                            {
-                                System.IO.File.Delete(rutaAnterior);
-                            }
-                        }
-
-                        // Subir nueva imagen
-                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Imagen.FileName);
-                        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "productosImg");
-                        var filePath = Path.Combine(uploadsFolder, fileName);
-
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await Imagen.CopyToAsync(stream);
-                        }
-
-                        ropa.ImagenRuta = "/productosImg/" + fileName;
+                        var rutaAnterior = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", imagenAnterior.TrimStart('/'));
+                        if (System.IO.File.Exists(rutaAnterior))
+                            System.IO.File.Delete(rutaAnterior);
                     }
-                    _context.Update(ropa);
-                    await _context.SaveChangesAsync();
+
+                    // Guardar nueva imagen
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "productosImg");
+                    Directory.CreateDirectory(uploadsFolder);
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Imagen.FileName);
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await Imagen.CopyToAsync(stream);
+                    }
+
+                    ropaExistente.ImagenRuta = "/productosImg/" + fileName;
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RopaExists(ropa.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Ropa));
+
+                _context.Ropa.Update(ropaExistente);
+                await _context.SaveChangesAsync();
+
+                TempData["RopaMensaje"] = "Prenda actualizada correctamente.";
+                return RedirectToAction("Ropa");
             }
-            return View(ropa);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error actualizando prenda");
+                return View(ropa);
+            }
         }
+
 
         // Acción para mostrar la confirmación de eliminación
         public async Task<IActionResult> RopaEliminar(int? id)

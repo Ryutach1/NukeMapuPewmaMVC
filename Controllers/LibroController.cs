@@ -69,61 +69,70 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
         // Acción para procesar la edición
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LibroEditar(int id, Libro libro, IFormFile Imagen)
+        public async Task<IActionResult> LibroEditar(int id, [Bind("Id,Nombre,Autor,Editorial,Categoria,Fecha,Descripcion,Precio,Cantidad")] Libro libro, IFormFile? Imagen)
         {
             if (id != libro.Id)
-            {
                 return NotFound();
-            }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(libro);
+
+            try
             {
-                try
+                var libroExistente = await _context.Libro.FirstOrDefaultAsync(l => l.Id == id);
+                if (libroExistente == null)
+                    return NotFound();
+
+                // Guardar la ruta anterior (si existe)
+                string? imagenAnterior = libroExistente.ImagenRuta;
+
+                // Actualizar campos del libro
+                libroExistente.Nombre = libro.Nombre;
+                libroExistente.Autor = libro.Autor;
+                libroExistente.Editorial = libro.Editorial;
+                libroExistente.Categoria = libro.Categoria;
+                libroExistente.Fecha = libro.Fecha;
+                libroExistente.Descripcion = libro.Descripcion;
+                libroExistente.Precio = libro.Precio;
+                libroExistente.Cantidad = libro.Cantidad;
+
+                // Si se subió una nueva imagen
+                if (Imagen != null && Imagen.Length > 0)
                 {
-                    var libroExistente = await _context.Libro.AsNoTracking().FirstOrDefaultAsync(l => l.Id == id);
-                    if (Imagen != null && Imagen.Length > 0)
+                    // Eliminar imagen anterior si existe
+                    if (!string.IsNullOrEmpty(imagenAnterior))
                     {
-                        // Eliminar imagen anterior si existe
-                        if (!string.IsNullOrEmpty(libro.ImagenRuta))
-                        {
-                            var rutaAnterior = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", libro.ImagenRuta.TrimStart('/'));
-                            if (System.IO.File.Exists(rutaAnterior))
-                            {
-                                System.IO.File.Delete(rutaAnterior);
-                            }
-                        }
-
-                        // Subir nueva imagen
-                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Imagen.FileName);
-                        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "productosImg");
-                        var filePath = Path.Combine(uploadsFolder, fileName);
-
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await Imagen.CopyToAsync(stream);
-                        }
-
-                        libro.ImagenRuta = "/productosImg/" + fileName;
+                        var rutaAnterior = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", imagenAnterior.TrimStart('/'));
+                        if (System.IO.File.Exists(rutaAnterior))
+                            System.IO.File.Delete(rutaAnterior);
                     }
-                    _context.Update(libro);
-                    await _context.SaveChangesAsync();
+
+                    // Guardar nueva imagen
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "productosImg");
+                    Directory.CreateDirectory(uploadsFolder); // asegúrate de que la carpeta exista
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Imagen.FileName);
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await Imagen.CopyToAsync(stream);
+                    }
+
+                    libroExistente.ImagenRuta = "/productosImg/" + fileName;
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!LibroExists(libro.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Libro));
+
+                _context.Libro.Update(libroExistente);
+                await _context.SaveChangesAsync();
+
+                TempData["LibroMensaje"] = "Libro actualizado correctamente.";
+                return RedirectToAction("Libro");
             }
-            return View(libro);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error actualizando libro");
+                return View(libro);
+            }
         }
-
         // Acción para mostrar la confirmación de eliminación
         public async Task<IActionResult> LibroEliminar(int? id)     //falta vista LibroEliminar
         {

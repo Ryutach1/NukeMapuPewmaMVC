@@ -69,59 +69,62 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
         // Acción para procesar la edición
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ArteEditar(int id, Artesania artesania, IFormFile Imagen)
+        public async Task<IActionResult> ArteEditar(int id, [Bind("Id,Nombre,Descripcion,Precio,Cantidad")] Artesania artesania, IFormFile? Imagen)
         {
             if (id != artesania.Id)
-            {
                 return NotFound();
-            }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(artesania);
+
+            try
             {
-                try
+                var artesaniaExistente = await _context.Artesania.FirstOrDefaultAsync(a => a.Id == id);
+                if (artesaniaExistente == null)
+                    return NotFound();
+
+                // Mantener ruta imagen anterior
+                string? imagenAnterior = artesaniaExistente.ImagenRuta;
+
+                // Asignar datos nuevos
+                artesaniaExistente.Nombre = artesania.Nombre;
+                artesaniaExistente.Descripcion = artesania.Descripcion;
+                artesaniaExistente.Precio = artesania.Precio;
+                artesaniaExistente.Cantidad = artesania.Cantidad;
+
+                if (Imagen != null && Imagen.Length > 0)
                 {
-                    var artesaniaExistente = await _context.Artesania.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
-                    if (Imagen != null && Imagen.Length > 0)
+                    if (!string.IsNullOrEmpty(imagenAnterior))
                     {
-                        // Eliminar imagen anterior si existe
-                        if (!string.IsNullOrEmpty(artesania.ImagenRuta))
-                        {
-                            var rutaAnterior = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", artesania.ImagenRuta.TrimStart('/'));
-                            if (System.IO.File.Exists(rutaAnterior))
-                            {
-                                System.IO.File.Delete(rutaAnterior);
-                            }
-                        }
-
-                        // Subir nueva imagen
-                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Imagen.FileName);
-                        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "productosImg");
-                        var filePath = Path.Combine(uploadsFolder, fileName);
-
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await Imagen.CopyToAsync(stream);
-                        }
-
-                        artesania.ImagenRuta = "/productosImg/" + fileName;
+                        var rutaAnterior = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", imagenAnterior.TrimStart('/'));
+                        if (System.IO.File.Exists(rutaAnterior))
+                            System.IO.File.Delete(rutaAnterior);
                     }
-                    _context.Update(artesania);
-                    await _context.SaveChangesAsync();
+
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "productosImg");
+                    Directory.CreateDirectory(uploadsFolder); // asegura carpeta
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Imagen.FileName);
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await Imagen.CopyToAsync(stream);
+                    }
+
+                    artesaniaExistente.ImagenRuta = "/productosImg/" + fileName;
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ArtesaniaExists(artesania.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Artesania));
+
+                _context.Artesania.Update(artesaniaExistente); // ← fuerza actualización
+                await _context.SaveChangesAsync();
+
+                TempData["ArtesaniaMensaje"] = "Artesanía actualizada correctamente.";
+                return RedirectToAction("Artesania");
             }
-            return View(artesania);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error actualizando artesanía");
+                return View(artesania);
+            }
         }
 
         // Acción para mostrar la confirmación de eliminación

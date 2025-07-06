@@ -4,6 +4,11 @@
     ViewData["Title"] = "Artesanía";
 }
 
+@if (TempData["ArtesaniaMensaje"] != null)
+{
+    <div class="alert alert-success">@TempData["ArtesaniaMensaje"]</div>
+}
+
 
 <div class="text-central">
     <h1 class="display-4">Catálogo de Artesanías Unicas</h1>

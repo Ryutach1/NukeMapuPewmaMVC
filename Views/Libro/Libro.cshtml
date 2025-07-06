@@ -3,6 +3,12 @@
     ViewData["Title"] = "Libro";
 }
 
+@if (TempData["LibroMensaje"] != null)
+{
+    <div class="alert alert-success">@TempData["LibroMensaje"]</div>
+}
+
+
 <div class="text-central">
     <h1 class="display-4">Catálogo de Libros</h1>
     <a asp-area=""  class="btn btn-success" asp-action="LibroCrear">Crear nueva</a>

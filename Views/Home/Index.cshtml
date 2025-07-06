@@ -1,12 +1,6 @@
-﻿@model dynamic
+﻿@model List<dynamic>
 @{
-    ViewData["Title"] = "Página Principal";
-     var tipo = Model.GetType().Name;
-
-    bool HasProperty(object obj, string propertyName)
-    {
-        return obj.GetType().GetProperty(propertyName) != null;
-    }
+    ViewData["Title"] = "Inicio";
 }
 
 <div class="app-container">
@@ -17,6 +11,76 @@
         </div>
     </header>
 
+<!-- Sección de botones más cercana-->
+<div class="container my-5">
+    <div class="row justify-content-center gap-4">
+        <div class="col-md-3">
+            <a asp-controller="Artesania" asp-action="Artesania" class="text-decoration-none">
+                <div class="boton-card text-center text-white">
+                    <div class="card-body py-5">
+                        <h4 class="card-title">Artesanía</h4>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a asp-controller="Libro" asp-action="Libro" class="text-decoration-none">
+                <div class="boton-card text-center text-white">
+                    <div class="card-body py-5">
+                        <h4 class="card-title">Libros</h4>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a asp-controller="Ropa" asp-action="Ropa" class="text-decoration-none">
+                <div class="boton-card text-center text-white">
+                    <div class="card-body py-5">
+                        <h4 class="card-title">Ropa</h4>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Tablón de notificaciones  -->
+<div>
+<h2>🔔 Tablón de notificaciones de Stock</h2>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Nombre</th>
+                <th>Cantidad</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Tipo</td>
+                <td>@(item.Nombre ?? item.Tipo)</td> <!-- fallback para "Otros" -->
+                <td>@item.Cantidad</td>
+                <td style="background-color:rgba(255, 69, 69, 0.7);">¡Stock crítico! Requiere monitoreo.</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-success">
+    <p style="text-align: center;">No hay alertas de stock por ahora.</p>
+    </div>
+}
+</div>
     <!-- Sección de búsqueda mejorada -->
     <section class="search-section">
         <h2 class="search-title">Buscar producto:</h2>
@@ -31,19 +95,7 @@
         </div>
     </section>
 
-<!-- prueba  -->
-    <h2> Vista notificaciones</h2>
-    @if (Model != null && Model.Any()) 
-        {
-            @foreach (var tipo in Model)
-        {
-           <tr>
-                <td>@item.Nombre</td>
-                <td class="cantidad">@item.Cantidad</td>
-                <td class="estado"></td>
-            </tr>
-        }
-                }
+
 
 @*
     <!-- Pie de página -->
@@ -116,19 +168,3 @@
         }
     });
 </script>
-
-<script>
-    $(document).ready(function () {
-        $('#tablaProductos tbody tr').each(function () {
-            var cantidad = parseInt($(this).find('.cantidad').text());
-
-            if (cantidad < 2) {
-                $(this).find('.estado').html('<span style="color: red;">¡Pocas unidades!</span>');
-            } else {
-                $(this).find('.estado').text('Disponible');
-            }
-        });
-    });
-</script>
-
-
