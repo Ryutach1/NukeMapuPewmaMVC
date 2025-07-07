@@ -27,7 +27,7 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LibroCrear(Libro libro, IFormFile Imagen)
+        public async Task<IActionResult> LibroCrear(Libro libro, IFormFile? Imagen)
         {
             if (ModelState.IsValid)
             {
@@ -69,7 +69,7 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
         // Acción para procesar la edición
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LibroEditar(int id, [Bind("Id,Nombre,Autor,Editorial,Categoria,Fecha,Descripcion,Precio,Cantidad")] Libro libro, IFormFile? Imagen)
+        public async Task<IActionResult> LibroEditar(int id, Libro libro, IFormFile? Imagen)
         {
             if (id != libro.Id)
                 return NotFound();

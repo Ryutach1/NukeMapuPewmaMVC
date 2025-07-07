@@ -24,11 +24,12 @@ html {
 body {
     margin-bottom: 60px;
 
-    background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+    background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
         url('https://i.imgur.com/Jj2dPFd.jpeg');
 
-
     box-sizing: border-box;
+    background-size: cover;
+    background-position: center;
 }
 
 .search-section {
@@ -40,7 +41,18 @@ body {
 }
 
 .section-table {
-    background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9))
+    background: linear-gradient(rgba(255, 255, 255, 0.850), rgba(255, 255, 255, 0.9));
+}
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive table {
+    width: 100%;
+    min-width: 600px; /* o el tamaño mínimo necesario */
+    border-collapse: collapse;
 }
 
 :root {
@@ -182,8 +194,8 @@ body {
 }
 
 .result-item {
-    padding: 15px;
-    border-bottom: 1px solid #eee;
+    padding: 10px;
+    border-bottom: 1px solid #bdbdbd;
     display: flex;
     justify-content: space-between;
     align-items: center;

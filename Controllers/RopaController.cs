@@ -27,7 +27,7 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RopaCrear(Ropa ropa, IFormFile Imagen)
+        public async Task<IActionResult> RopaCrear(Ropa ropa, IFormFile? Imagen)
         {
             if (ModelState.IsValid)
             {
@@ -69,7 +69,7 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
         // Acción para procesar la edición
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RopaEditar(int id, [Bind("Id,Nombre,Talla,Precio,Cantidad,Estado")] Ropa ropa, IFormFile? Imagen)
+        public async Task<IActionResult> RopaEditar(int id, Ropa ropa, IFormFile? Imagen)
         {
             if (id != ropa.Id)
                 return NotFound();

@@ -27,7 +27,7 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ArteCrear(Artesania artesania, IFormFile Imagen)
+        public async Task<IActionResult> ArteCrear(Artesania artesania, IFormFile? Imagen)
         {
             if (ModelState.IsValid)
             {
@@ -69,7 +69,7 @@ namespace ProyectoNukeMapuPewmaVSC.Controllers
         // Acción para procesar la edición
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ArteEditar(int id, [Bind("Id,Nombre,Descripcion,Precio,Cantidad")] Artesania artesania, IFormFile? Imagen)
+        public async Task<IActionResult> ArteEditar(int id, Artesania artesania, IFormFile? Imagen)
         {
             if (id != artesania.Id)
                 return NotFound();
