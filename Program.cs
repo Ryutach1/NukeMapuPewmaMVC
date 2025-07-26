@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using ProyectoNukeMapuPewmaMVC.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.WebHost.UseUrls("http://*:10000"); // <<--- AÑADE ESTO
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
