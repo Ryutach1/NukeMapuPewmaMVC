@@ -17,10 +17,12 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <Content Update="appsettings.Production.json">
-    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <ItemGroup>
+  <Content Include="database\nukemapudbPrueba.sqlite">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </Content>
+</ItemGroup>
+
   </ItemGroup>
 
 </Project>
