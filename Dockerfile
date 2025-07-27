@@ -6,7 +6,7 @@ WORKDIR /src
 COPY . .
 
 # Publica el proyecto
-RUN dotnet publish "NukeMapuPewmaMVC.csproj" -c Release -o /app/publish
+RUN dotnet publish "ProyectoNukeMapuPewmaMVC.csproj" -c Release -o /app/publish
 
 # Etapa 2: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
@@ -20,4 +20,4 @@ ENV ASPNETCORE_URLS=http://+:10000
 EXPOSE 10000
 
 # Comando de inicio
-ENTRYPOINT ["dotnet", "NukeMapuPewmaMVC.dll"]
+ENTRYPOINT ["dotnet", "ProyectoNukeMapuPewmaMVC.dll"]
