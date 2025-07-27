@@ -24,8 +24,6 @@
   <Content Include="database\nukemapudbPrueba.sqlite">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </Content>
-</ItemGroup>
-
   </ItemGroup>
 
 </Project>
